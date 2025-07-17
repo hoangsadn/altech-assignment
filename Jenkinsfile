@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://github.com/hoangsadn/altech-assignment.git', branch: 'main'
+                git url: 'git@github.com:hoangsadn/altech-assignment.git', branch: 'main'
             }
         }
 
