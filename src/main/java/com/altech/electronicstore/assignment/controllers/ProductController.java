@@ -40,6 +40,12 @@ public class ProductController {
         return productService.getProducts(pageable);
     }
 
+    //Create product
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
 
 
     @PostMapping("/{id}/deals")

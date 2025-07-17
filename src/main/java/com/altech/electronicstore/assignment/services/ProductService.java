@@ -3,6 +3,7 @@ package com.altech.electronicstore.assignment.services;
 import com.altech.electronicstore.assignment.models.Deal;
 import com.altech.electronicstore.assignment.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,11 @@ public class ProductService {
     // Example method to add a deal to a product
     public Deal addDealToProduct(Long id, Deal deal) {
         return deal; // Return the updated deal
+    }
+
+    @Cacheable(value = "products", key = "#id")
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
     }
 
 }

@@ -18,5 +18,4 @@ public class Deal {
     private Integer id;
     private String description; // e.g., "Buy 1 get 50% off the second"
     private LocalDateTime expiration;
-    // getters and setters
 }
