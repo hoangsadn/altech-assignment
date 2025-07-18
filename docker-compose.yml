@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
     ports:
-      - "5432:5432"
+      - "5423:5423"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   #Redis
