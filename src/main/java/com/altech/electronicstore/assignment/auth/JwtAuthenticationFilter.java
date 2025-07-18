@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.config;
+package com.altech.electronicstore.assignment.auth;
 
 import com.altech.electronicstore.assignment.services.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
@@ -23,6 +23,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/") || path.startsWith("/api/public/");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                String username = String.valueOf(tokenProvider.getUserIdFromJWT(jwt));
+                String username = String.valueOf(tokenProvider.getUsernameFromJWT(jwt));
 
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication =

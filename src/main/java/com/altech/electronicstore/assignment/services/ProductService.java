@@ -1,13 +1,19 @@
 package com.altech.electronicstore.assignment.services;
 
+import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.models.Deal;
 import com.altech.electronicstore.assignment.models.Product;
+import com.altech.electronicstore.assignment.models.ProductFilterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.altech.electronicstore.assignment.repositories.ProductRepository;
+
+import static com.altech.electronicstore.assignment.common.APICode.PRODUCT_OUT_OF_STOCK;
 
 @Service
 public class ProductService {
@@ -15,33 +21,53 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    // This service would contain methods to handle product-related operations
-    // such as creating, deleting, and retrieving products.
-
-    // Example method to create a product
-    public Product createProduct(Product product) {
-        // Logic to save the product to the database
-        return productRepository.save(product); // Assuming productRepository is a JPA repository
+    public void insertProduct(Product product) {
+        productRepository.save(product);
     }
 
-    // Example method to remove a product by ID
+    public void updateProduct(Product product) {
+        getProductById(product.getId());
+        productRepository.save(product);
+    }
+
     public void removeProduct(Long id) {
-        productRepository.deleteById(id); // Assuming productRepository is a JPA repository
+        getProductById(id);
+        productRepository.deleteById(id);
     }
 
-    // Example method to get products with pagination
-    public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
 
-    // Example method to add a deal to a product
+    //TODO: Implement this method to add a deal to a product
     public Deal addDealToProduct(Long id, Deal deal) {
-        return deal; // Return the updated deal
+        return deal;
     }
 
     @Cacheable(value = "products", key = "#id")
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).
+                orElseThrow(() -> new APIException(PRODUCT_OUT_OF_STOCK));
+
     }
+
+    public Page<Product> filterProducts(ProductFilterRequest filter) {
+
+        Sort sort = filter.getSortDirection().equalsIgnoreCase("desc") ?
+                Sort.by(filter.getSortBy()).descending() : Sort.by(filter.getSortBy()).ascending();
+
+        Pageable pageable = PageRequest.of(
+                filter.getPage() != null ? filter.getPage() : 0,
+                filter.getSize() != null ? filter.getSize() : 10,
+                sort
+        );
+
+        return productRepository.findByFilters(
+                filter.getCategory(),
+                filter.getMinPrice(),
+                filter.getMaxPrice(),
+                filter.getAvailable(),
+                filter.getSearchQuery(),
+                pageable
+        );
+    }
+
 
 }

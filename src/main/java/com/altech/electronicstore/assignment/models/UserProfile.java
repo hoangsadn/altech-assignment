@@ -1,5 +1,6 @@
 package com.altech.electronicstore.assignment.models;
 
+import com.altech.electronicstore.assignment.auth.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,7 +14,7 @@ import org.springframework.data.annotation.Id;
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class UserProfile {
 
     @jakarta.persistence.Id
     @Id

@@ -1,55 +1,74 @@
 package com.altech.electronicstore.assignment.controllers;
 
+import com.altech.electronicstore.assignment.models.ProductFilterRequest;
+import com.altech.electronicstore.assignment.models.Response;
+import com.altech.electronicstore.assignment.services.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.altech.electronicstore.assignment.services.ProductService;
 import com.altech.electronicstore.assignment.models.Product;
 import com.altech.electronicstore.assignment.models.Deal;
 
 @RestController
-@RequestMapping("/admin/products")
+@RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    // ping
-    @GetMapping("/ping")
-    public String ping() {
-        return "pong";
-    }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    @PreAuthorize("hasRole('ADMIN')")
+    public Response<String> createProduct(@RequestBody Product product) {
+        productService.insertProduct(product);
+        return Response.success("Product created successfully");
+    }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public Response<String> updateProduct(@RequestBody Product product) {
+        productService.updateProduct(product);
+        return Response.success("Product updated successfully");
     }
 
     @DeleteMapping("/{id}")
-    public void removeProduct(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Response<String> removeProduct(@PathVariable Long id) {
         productService.removeProduct(id);
+        return Response.success("Product removed successfully");
     }
+
 
     @GetMapping
     @Operation(summary = "Get paginated list of users")
-    @PageableAsQueryParam
-    public Page<Product> getProducts(Pageable pageable) {
-        return productService.getProducts(pageable);
+    public Response<Page<Product>> filterProducts(ProductFilterRequest filter) {
+        Page<Product> products = productService.filterProducts(filter);
+        return Response.success(products);
     }
 
-    //Create product
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
 
-
     @PostMapping("/{id}/deals")
     public Deal addDeal(@PathVariable Long id, @RequestBody Deal deal) {
         return productService.addDealToProduct(id, deal);
     }
+
+
+    //TODO: Remove this after testing
+    private final RedisService redisService;
+
+    @GetMapping("/flush")
+    public String flushCache() {
+        redisService.flushAll();
+        return "Cache flushed successfully";
+    }
+
 }

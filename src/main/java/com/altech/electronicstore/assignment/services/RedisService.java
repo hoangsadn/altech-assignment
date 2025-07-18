@@ -28,4 +28,11 @@ public class RedisService {
     public void deleteValue(String key) {
         redisTemplate.delete(key);
     }
+
+
+    public void flushAll() {
+        redisTemplate.getConnectionFactory().getConnection().flushAll();
+        // OR use flushDb() to clear current DB only
+        // redisTemplate.getConnectionFactory().getConnection().flushDb();
+    }
 }
