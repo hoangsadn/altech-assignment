@@ -41,7 +41,7 @@ public class ProductService {
         return deal;
     }
 
-    @Cacheable(value = "products", key = "#id")
+//    @Cacheable(value = "products", key = "#id")
     public Product getProductById(Long id) {
         return productRepository.findById(id).
                 orElseThrow(() -> new APIException(PRODUCT_OUT_OF_STOCK));

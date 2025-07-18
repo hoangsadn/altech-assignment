@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
 
 
     @Query("""
@@ -19,10 +20,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       AND (:minPrice IS NULL OR p.price >= :minPrice)
       AND (:maxPrice IS NULL OR p.price <= :maxPrice)
       AND (:available IS NULL OR p.stock > 0)
-      AND (:searchQuery IS NULL OR
-           LOWER(p.name) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR
-           LOWER(p.description) LIKE LOWER(CONCAT('%', :searchQuery, '%')))
+
     """)
+    //      AND (:searchQuery IS NULL OR
+//           LOWER(p.name) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR
+    //           LOWER(p.description) LIKE LOWER(CONCAT('%', :searchQuery, '%')))
     Page<Product> findByFilters(
             @Param("category") String category,
             @Param("minPrice") Double minPrice,
@@ -33,4 +35,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     );
 
 
+    Optional<Product> findProductByName(String s);
 }

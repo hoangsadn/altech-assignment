@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class Basket {
     private Long id;
 
     private Long userId;
+
+    @Version
+    private Long version; // Optimistic locking field
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "basket_id")
