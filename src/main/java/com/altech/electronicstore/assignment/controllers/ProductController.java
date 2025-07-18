@@ -11,7 +11,7 @@ import com.altech.electronicstore.assignment.models.Product;
 import com.altech.electronicstore.assignment.models.Deal;
 
 @RestController
-@RequestMapping("/admin/products")
+@RequestMapping("/api/admin/products")
 public class ProductController {
 
     @Autowired
