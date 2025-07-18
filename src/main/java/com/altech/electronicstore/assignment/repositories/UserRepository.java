@@ -1,6 +1,6 @@
 package com.altech.electronicstore.assignment.repositories;
 
-import com.altech.electronicstore.assignment.models.UserProfile;
+import com.altech.electronicstore.assignment.dto.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -2,12 +2,11 @@ package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.auth.JwtTokenProvider;
 import com.altech.electronicstore.assignment.auth.JwtAuthenticationResponse;
-import com.altech.electronicstore.assignment.models.LoginRequest;
-import com.altech.electronicstore.assignment.models.RegistrationRequest;
-import com.altech.electronicstore.assignment.models.UserProfile;
+import com.altech.electronicstore.assignment.dto.LoginRequest;
+import com.altech.electronicstore.assignment.dto.RegistrationRequest;
+import com.altech.electronicstore.assignment.dto.UserProfile;
 import com.altech.electronicstore.assignment.auth.UserRole;
 import com.altech.electronicstore.assignment.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;

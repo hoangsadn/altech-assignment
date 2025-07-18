@@ -2,13 +2,11 @@ package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APICode;
 import com.altech.electronicstore.assignment.common.APIException;
-import com.altech.electronicstore.assignment.models.Basket;
-import com.altech.electronicstore.assignment.models.Product;
-import com.altech.electronicstore.assignment.models.Receipt;
-import com.altech.electronicstore.assignment.models.ReceiptItem;
+import com.altech.electronicstore.assignment.dto.Basket;
+import com.altech.electronicstore.assignment.dto.Product;
+import com.altech.electronicstore.assignment.dto.Receipt;
+import com.altech.electronicstore.assignment.dto.ReceiptItem;
 import com.altech.electronicstore.assignment.repositories.BasketRepository;
-import com.altech.electronicstore.assignment.repositories.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

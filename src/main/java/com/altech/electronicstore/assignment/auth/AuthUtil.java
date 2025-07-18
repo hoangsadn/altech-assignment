@@ -2,10 +2,9 @@ package com.altech.electronicstore.assignment.auth;
 
 import com.altech.electronicstore.assignment.common.APICode;
 import com.altech.electronicstore.assignment.common.APIException;
-import com.altech.electronicstore.assignment.models.UserProfile;
+import com.altech.electronicstore.assignment.dto.UserProfile;
 import com.altech.electronicstore.assignment.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;

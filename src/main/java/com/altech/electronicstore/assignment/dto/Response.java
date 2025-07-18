@@ -1,9 +1,7 @@
-package com.altech.electronicstore.assignment.models;
+package com.altech.electronicstore.assignment.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 

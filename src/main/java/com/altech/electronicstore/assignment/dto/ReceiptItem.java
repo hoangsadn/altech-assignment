@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.models;
+package com.altech.electronicstore.assignment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

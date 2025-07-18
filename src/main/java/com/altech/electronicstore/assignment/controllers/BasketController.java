@@ -1,11 +1,11 @@
 package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.auth.AuthUtil;
-import com.altech.electronicstore.assignment.models.Basket;
-import com.altech.electronicstore.assignment.models.InsertBasketRequest;
-import com.altech.electronicstore.assignment.models.Receipt;
-import com.altech.electronicstore.assignment.models.Response;
-import com.altech.electronicstore.assignment.models.UserProfile;
+import com.altech.electronicstore.assignment.dto.Basket;
+import com.altech.electronicstore.assignment.dto.InsertBasketRequest;
+import com.altech.electronicstore.assignment.dto.Receipt;
+import com.altech.electronicstore.assignment.dto.Response;
+import com.altech.electronicstore.assignment.dto.UserProfile;
 import com.altech.electronicstore.assignment.services.BasketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

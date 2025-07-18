@@ -1,7 +1,7 @@
 package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.common.APIException;
-import com.altech.electronicstore.assignment.models.Response;
+import com.altech.electronicstore.assignment.dto.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -6,13 +6,16 @@ import lombok.Getter;
 @Getter
 public enum APICode {
     USER_NOT_FOUND(404, "User not found"),
+
     VALIDATION_FAILED(400, "Validation failed"),
 
-    // out of stock product
-    PRODUCT_OUT_OF_STOCK(400, "Product is out of stock"),
-    // product not found
-    PRODUCT_NOT_FOUND(404, "Product not found")
+    PRODUCT_NOT_FOUND(500, "Product not found"),
+    PRODUCT_OUT_OF_STOCK(51, "Product is out of stock"),
 
+    //Product created successfully
+    PRODUCT_CREATED(501, "Product created successfully"),
+    PRODUCT_UPDATED(502, "Product updated successfully"),
+    PRODUCT_REMOVED(503, "Product removed successfully")
 
 
     ;

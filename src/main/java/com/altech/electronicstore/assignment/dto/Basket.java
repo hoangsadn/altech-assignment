@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.models;
+package com.altech.electronicstore.assignment.dto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

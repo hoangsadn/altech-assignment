@@ -1,11 +1,11 @@
-package com.altech.electronicstore.assignment.models;
-
+package com.altech.electronicstore.assignment.dto;
 
 import lombok.Data;
 
 @Data
-public class RegistrationRequest {
+public class LoginRequest {
     private String username;
     private String password;
     // getters and setters
 }
+
