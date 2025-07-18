@@ -8,4 +8,4 @@ ENV CLASSPATH /opt
 EXPOSE 8088
 
 WORKDIR /opt
-CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC", "-XX:MaxRAMPercentage=95.0", "-jar", "electronic-store-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC", "-XX:MaxRAMPercentage=95.0", "-jar", "assignment-0.0.1-SNAPSHOT.jar"]
