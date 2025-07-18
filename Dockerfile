@@ -1,7 +1,7 @@
 FROM openjdk:17-alpine
 
 # copy wildcards to avoid this command failing if there's no target/lib directory
-COPY build/libs* /opt
+COPY build/libs/* /opt
 
 ENV PORT 8088
 ENV CLASSPATH /opt
