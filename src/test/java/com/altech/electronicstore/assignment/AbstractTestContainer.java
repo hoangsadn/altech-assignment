@@ -2,7 +2,6 @@ package com.altech.electronicstore.assignment;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,7 +19,7 @@ import java.time.Duration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractTestContainer {
 
     private static final DockerImageName REDIS_IMAGE = DockerImageName.parse("redis:7.2.3-alpine");
     private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:16-alpine");

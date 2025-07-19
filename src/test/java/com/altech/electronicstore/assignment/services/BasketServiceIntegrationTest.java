@@ -1,12 +1,10 @@
 package com.altech.electronicstore.assignment.services;
 
-import com.altech.electronicstore.assignment.AbstractIntegrationTest;
+import com.altech.electronicstore.assignment.AbstractTestContainer;
 import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.dto.Basket;
 import com.altech.electronicstore.assignment.dto.Product;
-import com.altech.electronicstore.assignment.repositories.BasketRepository;
 import com.altech.electronicstore.assignment.repositories.ProductRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,16 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
 //@Transactional
-class BasketServiceIntegrationTest extends AbstractIntegrationTest {
+class BasketServiceIntegrationTest extends AbstractTestContainer {
 
     private static final Logger log = LoggerFactory.getLogger(BasketServiceIntegrationTest.class);
 
