@@ -18,6 +18,21 @@ public enum APICode {
     PRODUCT_REMOVED(503, "Product removed successfully")
 
 
+    // Basket related codes
+    , BASKET_NOT_FOUND(600, "Basket not found"),
+    BASKET_CREATED(601, "Basket created successfully"),
+    BASKET_UPDATED(602, "Basket updated successfully"),
+    BASKET_REMOVED(603, "Basket removed successfully"),
+    BASKET_PRODUCT_ADDED(604, "Product added to basket successfully"),
+    BASKET_PRODUCT_REMOVED(605, "Product removed from basket successfully"),
+    // get
+    BASKET_GET(606, "Basket retrieved successfully"),
+
+    // Receipt related codes
+    RECEIPT_NOT_FOUND(700, "Receipt not found"),
+    RECEIPT_CREATED(701, "Receipt created successfully"),
+    RECEIPT_UPDATED(702, "Receipt updated successfully"),
+
     ;
 
 
