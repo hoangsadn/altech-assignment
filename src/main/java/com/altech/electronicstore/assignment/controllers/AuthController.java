@@ -18,9 +18,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Endpoints for user authentication and registration")
 public class AuthController{
 
     private final AuthenticationManager authenticationManager;
@@ -38,6 +43,14 @@ public class AuthController{
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(
+        summary = "Authenticate user and return JWT token",
+        description = "Authenticates a user using username and password. Returns a JWT token if authentication is successful."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully authenticated. JWT token returned."),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials.")
+    })
     @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -53,6 +66,14 @@ public class AuthController{
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
+    @Operation(
+        summary = "Register a new user",
+        description = "Registers a new user with the provided username and password. Returns the created user profile."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully."),
+        @ApiResponse(responseCode = "400", description = "Username already exists.")
+    })
     @PostMapping("/register")
     public ResponseEntity<UserProfile> register(@RequestBody RegistrationRequest registrationRequest) {
         if (userRepository.existsUserByUsername(registrationRequest.getUsername())) {
@@ -68,6 +89,15 @@ public class AuthController{
         return ResponseEntity.ok(savedUser);
     }
 
+    @Operation(
+        summary = "Register a new admin user",
+        description = "Registers a new admin user. Only accessible by users with ADMIN role."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Admin user registered successfully."),
+        @ApiResponse(responseCode = "400", description = "Username already exists."),
+        @ApiResponse(responseCode = "403", description = "Access denied. Only admins can register new admins.")
+    })
     @PostMapping("/register-admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserProfile> registerAdmin(@RequestBody RegistrationRequest registrationRequest) {
