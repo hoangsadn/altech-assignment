@@ -16,6 +16,8 @@ This project provides a RESTful API for an electronic store.
 - Uses **PostgreSQL** as the main database.
 - Uses **Redis** for in-memory caching.
 - Integrates **Grafana** for monitoring and metrics.
+- Uses **Jenkins** for automated build and CI/CD.
+- Deployed on my personal server for demonstration.
 
 ---
 
@@ -103,6 +105,20 @@ docker run assignment-app ./gradlew test
 docker-compose run app ./gradlew test
 ```
 Replace `app` with your service name.
+
+### Run One Test Case
+
+To run a specific test case (for example, method `shouldReturnTrueWhenConditionIsMet` in class `SomeServiceTest`):
+
+```bash
+./gradlew test --tests SomeServiceTest.shouldReturnTrueWhenConditionIsMet
+```
+
+To run a specific test case (for example, method `shouldAddItemToBasket` in class `BasketServiceIntegrationTest`):
+
+```bash
+./gradlew test --tests BasketServiceIntegrationTest.shouldAddItemToBasket
+```
 
 ---
 # Assignment Project
