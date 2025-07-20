@@ -1,153 +1,111 @@
-# Assignment Project
-
-## Requirements
-
-- [Docker](https://docs.docker.com/get-docker/) installed
-- [Java 17](https://adoptium.net/) or higher
-- [Spring Boot 3.5](https://spring.io/projects/spring-boot) (project uses Spring 3.5)
-- [Gradle](https://gradle.org/install/) build tool
+# Electronics Store 
 
 ## Overview
+This project implements a RESTful API for an electronics store's checkout system, built with **Spring Boot 3.5**, **PostgreSQL** for persistent storage, and **Redis** for in-memory caching. It supports admin operations (product management, discount deals, pagination) and customer operations (basket management, receipt calculation, filtering, pagination) with safe concurrent usage and comprehensive automated tests.
 
-This project provides a RESTful API for an electronic store.
+- **Swagger UI**: [http://localhost:8088/swagger-ui.html](http://localhost:8088/swagger-ui.html) (local) or [https://altech.celestialhighway.xyz/swagger-ui.html](https://altech.celestialhighway.xyz/swagger-ui.html) (deployed)
+- **OpenAPI Spec**: [http://localhost:8088/v3/api-docs](http://localhost:8088/v3/api-docs) (local) or [https://altech.celestialhighway.xyz/v3/api-docs](https://altech.celestialhighway.xyz/v3/api-docs) (deployed)
 
-- Supports basket management for shopping.
-- Implements user roles: **user** and **admin** for access control.
-- Uses **PostgreSQL** as the main database.
-- Uses **Redis** for in-memory caching.
-- Integrates **Grafana** for monitoring and metrics.
-- Uses **Jenkins** for automated build and CI/CD.
-- Deployed on my personal server for demonstration.
+## Requirements
+- [Docker](https://docs.docker.com/get-docker/)
+- [Java 17](https://adoptium.net/)
+- [Gradle](https://gradle.org/install/)
+- [Spring Boot 3.5](https://spring.io/projects/spring-boot)
 
----
+## Architecture
+- **Layered Architecture**: Separates concerns into controllers, services, and repositories for modularity and maintainability.
+- **Persistence**: PostgreSQL stores products, baskets, and discounts; Redis caches frequently accessed data (e.g., product details, basket state).
+- **Concurrency**: Uses JPA optimistic locking (`@Version`) for stock updates and Spring transactions to ensure atomicity and prevent partial updates.
+- **Extensibility**: Implements a factory pattern for discounts, allowing new deal types to be added without modifying existing code. Services use interfaces for flexibility.
+- **Security**: Role-based access control (ROLE_ADMIN for admin endpoints, ROLE_USER for customer endpoints) using Spring Security.
 
-## API Documentation (Swagger)
+## API Endpoints
+The API supports admin and customer operations with pagination, stock management, and discount application. All endpoints are documented in Swagger UI.
 
-- After starting the application, access Swagger UI at:
-  ```
-  http://localhost:8088/swagger
-  ```
-  or, if deployed, visit:
-  ```
-  https://altech.celestialhighway.xyz/swagger
-  ```
-  This is your deployment host.
 
-- The OpenAPI specification is available at `/swagger` or `/docs`.
+## Persistence and Concurrency
+- **PostgreSQL**: Stores products (`products` table), baskets (`baskets` and `basket_items` tables), and discounts (`discounts` table). Uses JPA with Hibernate for ORM.
+- **Redis**: Caches product details and basket state to reduce database load. Cache is invalidated on product or basket updates.
+- **Concurrency**:
+  - Stock updates use JPA’s `@Version` for optimistic locking to prevent race conditions.
+  - Basket operations (add/remove) are wrapped in `@Transactional` methods to ensure atomicity.
+  - Example: Adding a product to a basket checks stock, decrements it, and updates the basket in a single transaction. If any step fails, the transaction rolls back.
 
----
 
-## Docker Usage
+## Testing
+- **Coverage**: 94% (measured with JaCoCo)
+- **Test Types**:
+  - **Unit Tests**: 
+  - **Integration Tests**: 
 
-### Build the Docker Image
+## Setup and Running
+### Prerequisites
+- Docker
+- Java 17
+- Gradle
+- PostgreSQL
+- Redis
 
+### Build the Project
 ```bash
-docker build -t assignment-app .
+./gradlew clean build
 ```
 
-### Run the Docker Container (using Dockerfile)
-
+### Build and Run Locally
 ```bash
-docker run -p 8088:8088 assignment-app
+./gradlew bootRun
 ```
-The application will be available at `http://localhost:8088/`.
+Application runs on `http://localhost:8088`.
 
----
+### Docker Usage
+#### Build Docker Image
+```bash
+docker build -t my-springboot-app:latest .
+```
 
-## Docker Compose
+#### Run Docker Container
+```bash
+docker run -p 8088:8088 my-springboot-app:latest
+```
 
-If you have a `docker-compose.yml` file, you can start all services:
-
+### Docker Compose
+Start all services (Spring Boot, PostgreSQL, Redis, Grafana):
 ```bash
 docker-compose up
 ```
-By default, the app will be exposed on port 8088.
-
-**Services included:**
-- Application (Spring Boot)
-- PostgreSQL database
-- Redis cache
-- Grafana for metrics
-
-To stop services:
-
+Stop services:
 ```bash
 docker-compose down
 ```
 
-### Run Tests with Docker Compose
-
-```bash
-docker-compose run app ./gradlew test
-```
-Replace `app` with your service name in `docker-compose.yml`.
-
----
-
-## Running Unit Tests
-
+## Running Tests
 ### Locally
-
 ```bash
-# Gradle example
 ./gradlew test
 ```
 
-### In Docker (using Dockerfile)
-
+### Specific Test Case
 ```bash
-docker run assignment-app ./gradlew test
+./gradlew test --tests BasketServiceTest
 ```
 
-### In Docker Compose
-
-```bash
-docker-compose run app ./gradlew test
+## Environment Variables
+See `.env`:
 ```
-Replace `app` with your service name.
-
-### Run One Test Case
-
-To run a specific test case (for example, method `shouldReturnTrueWhenConditionIsMet` in class `SomeServiceTest`):
-
-```bash
-./gradlew test --tests SomeServiceTest.shouldReturnTrueWhenConditionIsMet
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/your_db
+SPRING_DATASOURCE_USERNAME=your_user
+SPRING_DATASOURCE_PASSWORD=your_password
+REDIS_HOST=localhost
+REDIS_PORT=6379
 ```
 
-To run a specific test case (for example, method `shouldAddItemToBasket` in class `BasketServiceIntegrationTest`):
-
-```bash
-./gradlew test --tests BasketServiceIntegrationTest.shouldAddItemToBasket
-```
-
----
-# Assignment Project
+## CI/CD 
+- **Jenkins**: [https://jenkins.celestialhighway.xyz](https://jenkins.celestialhighway.xyz) automates build, test, and deployment. Guest account: `guest` / `Guest123`
 
 
----
+## Deployment
+- **Deployed Host**: [https://altech.celestialhighway.xyz](https://altech.celestialhighway.xyz) (port 8088)
+- **Access**: Secured via Cloudflare tunneling. Local deployment via Docker is sufficient for evaluation.
 
-## CI/CD with Jenkins
 
-This project uses Jenkins for continuous integration and deployment.
-
-- **Jenkins Host:**  
-  [https://jenkins.celestialhighway.xyz/](https://jenkins.celestialhighway.xyz/)
-- **Deployment Host:**  
-  Application is deployed at [https://altech.celestialhighway.xyz/](https://altech.celestialhighway.xyz/) on port **8088**.
-
-- Jenkins automates build, test, and deployment processes.  
-  You can view build status, logs, and pipeline details on the Jenkins dashboard.
-
----
-
-## Deployment Note
-
-This application is deployed on a home server machine for demo purposes.  
-Access to the deployment host is tunneled through **Cloudflare** for secure connectivity.
-
----
-
-## Notes
-
-- Configure environment variables as needed (see `.env.example`).
-- For more details, check the source code and comments.
+- For further details, review the source code and comments in the repository.

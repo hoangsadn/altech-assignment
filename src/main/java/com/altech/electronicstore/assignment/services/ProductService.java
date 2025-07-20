@@ -1,11 +1,10 @@
 package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APIException;
-import com.altech.electronicstore.assignment.dto.Deal;
-import com.altech.electronicstore.assignment.dto.Product;
+import com.altech.electronicstore.assignment.entity.Deal;
+import com.altech.electronicstore.assignment.entity.Product;
 import com.altech.electronicstore.assignment.dto.ProductFilterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

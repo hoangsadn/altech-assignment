@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.dto;
+package com.altech.electronicstore.assignment.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

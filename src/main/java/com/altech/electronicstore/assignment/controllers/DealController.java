@@ -1,6 +1,6 @@
 package com.altech.electronicstore.assignment.controllers;
 
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Deal;
 import com.altech.electronicstore.assignment.dto.DealFilterRequest;
 import com.altech.electronicstore.assignment.dto.Response;
 import com.altech.electronicstore.assignment.common.APICode;

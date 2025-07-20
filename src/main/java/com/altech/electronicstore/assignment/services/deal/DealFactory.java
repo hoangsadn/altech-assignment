@@ -1,6 +1,5 @@
 package com.altech.electronicstore.assignment.services.deal;
 
-import com.altech.electronicstore.assignment.dto.Deal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

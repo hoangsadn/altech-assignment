@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   app:
     image: my-springboot-app:latest
     ports:
@@ -7,6 +8,8 @@ services:
     depends_on:
       - postgres
       - redis
+    env_file:
+      - .env
 
   postgres:
     image: postgres:16
@@ -16,7 +19,7 @@ services:
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
     ports:
-      - "5423:5423"
+      - "5423:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   #Redis

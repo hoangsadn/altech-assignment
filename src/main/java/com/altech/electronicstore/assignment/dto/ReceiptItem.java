@@ -14,5 +14,5 @@ public class ReceiptItem {
     private double unitPrice;
 
     private double totalPrice;
-    private double discountedPrice = 0.0; // Default to 0.0 if not provided
+    private double discountedPrice = 0.0;
 }

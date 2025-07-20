@@ -1,7 +1,7 @@
 package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APIException;
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Deal;
 import com.altech.electronicstore.assignment.dto.DealFilterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -2,11 +2,11 @@ package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.common.APICode;
-import com.altech.electronicstore.assignment.dto.Basket;
-import com.altech.electronicstore.assignment.dto.BasketProduct;
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Basket;
+import com.altech.electronicstore.assignment.entity.BasketProduct;
+import com.altech.electronicstore.assignment.entity.Deal;
 import com.altech.electronicstore.assignment.dto.InsertBasketRequest;
-import com.altech.electronicstore.assignment.dto.Product;
+import com.altech.electronicstore.assignment.entity.Product;
 import com.altech.electronicstore.assignment.dto.Receipt;
 import com.altech.electronicstore.assignment.dto.ReceiptItem;
 import com.altech.electronicstore.assignment.repositories.BasketRepository;
@@ -19,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BasketService {

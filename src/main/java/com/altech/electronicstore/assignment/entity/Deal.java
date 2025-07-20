@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.dto;
+package com.altech.electronicstore.assignment.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;

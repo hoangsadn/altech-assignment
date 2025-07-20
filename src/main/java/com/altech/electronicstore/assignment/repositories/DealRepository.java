@@ -1,6 +1,6 @@
 package com.altech.electronicstore.assignment.repositories;
 
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Deal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,6 +2,8 @@ package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.auth.AuthUtil;
 import com.altech.electronicstore.assignment.dto.*;
+import com.altech.electronicstore.assignment.entity.Basket;
+import com.altech.electronicstore.assignment.entity.UserProfile;
 import com.altech.electronicstore.assignment.services.BasketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

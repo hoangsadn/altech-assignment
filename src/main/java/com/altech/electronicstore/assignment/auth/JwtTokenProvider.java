@@ -29,7 +29,6 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expirationInMs}")
     private int jwtExpirationInMs;
 
-    // Generate a secure key from the secret
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
@@ -43,7 +42,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(username) // Use username or convert user ID to string if needed
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

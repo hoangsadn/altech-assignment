@@ -1,4 +1,4 @@
-package com.altech.electronicstore.assignment.dto;
+package com.altech.electronicstore.assignment.entity;
 
 import com.altech.electronicstore.assignment.auth.UserRole;
 import jakarta.persistence.Column;

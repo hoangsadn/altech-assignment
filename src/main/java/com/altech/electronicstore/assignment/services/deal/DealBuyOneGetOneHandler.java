@@ -3,7 +3,7 @@ package com.altech.electronicstore.assignment.services.deal;
 import com.altech.electronicstore.assignment.common.APICode;
 import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.common.ValidationUtils;
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Deal;
 import com.altech.electronicstore.assignment.dto.Receipt;
 import org.springframework.stereotype.Component;
 

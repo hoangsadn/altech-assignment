@@ -13,8 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.altech.electronicstore.assignment.services.ProductService;
-import com.altech.electronicstore.assignment.dto.Product;
-import com.altech.electronicstore.assignment.dto.Deal;
+import com.altech.electronicstore.assignment.entity.Product;
+import com.altech.electronicstore.assignment.entity.Deal;
 
 @RestController
 @RequestMapping("/api/products")

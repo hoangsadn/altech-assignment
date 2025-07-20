@@ -1,6 +1,6 @@
 package com.altech.electronicstore.assignment.repositories;
 
-import com.altech.electronicstore.assignment.dto.Basket;
+import com.altech.electronicstore.assignment.entity.Basket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

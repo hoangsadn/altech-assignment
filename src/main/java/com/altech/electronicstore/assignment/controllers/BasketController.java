@@ -1,11 +1,11 @@
 package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.auth.AuthUtil;
-import com.altech.electronicstore.assignment.dto.Basket;
+import com.altech.electronicstore.assignment.entity.Basket;
 import com.altech.electronicstore.assignment.dto.InsertBasketRequest;
 import com.altech.electronicstore.assignment.dto.Receipt;
 import com.altech.electronicstore.assignment.dto.Response;
-import com.altech.electronicstore.assignment.dto.UserProfile;
+import com.altech.electronicstore.assignment.entity.UserProfile;
 import com.altech.electronicstore.assignment.services.BasketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

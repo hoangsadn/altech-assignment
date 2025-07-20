@@ -4,7 +4,7 @@ import com.altech.electronicstore.assignment.auth.JwtTokenProvider;
 import com.altech.electronicstore.assignment.auth.JwtAuthenticationResponse;
 import com.altech.electronicstore.assignment.dto.LoginRequest;
 import com.altech.electronicstore.assignment.dto.RegistrationRequest;
-import com.altech.electronicstore.assignment.dto.UserProfile;
+import com.altech.electronicstore.assignment.entity.UserProfile;
 import com.altech.electronicstore.assignment.auth.UserRole;
 import com.altech.electronicstore.assignment.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;

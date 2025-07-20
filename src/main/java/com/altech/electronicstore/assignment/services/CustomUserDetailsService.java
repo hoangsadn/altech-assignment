@@ -1,6 +1,6 @@
 package com.altech.electronicstore.assignment.services;
 
-import com.altech.electronicstore.assignment.dto.UserProfile;
+import com.altech.electronicstore.assignment.entity.UserProfile;
 import com.altech.electronicstore.assignment.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

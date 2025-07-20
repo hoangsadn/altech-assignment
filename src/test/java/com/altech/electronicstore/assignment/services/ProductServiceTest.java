@@ -2,8 +2,8 @@ package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.common.APICode;
-import com.altech.electronicstore.assignment.dto.Deal;
-import com.altech.electronicstore.assignment.dto.Product;
+import com.altech.electronicstore.assignment.entity.Deal;
+import com.altech.electronicstore.assignment.entity.Product;
 import com.altech.electronicstore.assignment.dto.ProductFilterRequest;
 import com.altech.electronicstore.assignment.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
