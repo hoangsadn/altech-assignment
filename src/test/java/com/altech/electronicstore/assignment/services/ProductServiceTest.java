@@ -47,7 +47,7 @@ class ProductServiceTest {
         product.setPrice(100.0);
 
         deal = new Deal();
-        deal.setId(1);
+        deal.setId(1L);
 
         filterRequest = new ProductFilterRequest();
         filterRequest.setPage(0);

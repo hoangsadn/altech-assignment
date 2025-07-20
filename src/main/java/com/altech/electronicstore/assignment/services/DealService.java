@@ -64,7 +64,6 @@ public class DealService {
                 filter.getActive(),
                 filter.getSearchQuery(),
                 pageable
-
         );
     }
 

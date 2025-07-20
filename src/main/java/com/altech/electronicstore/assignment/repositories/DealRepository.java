@@ -18,9 +18,11 @@ public interface DealRepository extends JpaRepository<Deal, Long> {
     @Query("""
     SELECT d FROM Deal d
     WHERE (:active IS NULL OR d.active = :active)
-      AND (:searchQuery IS NULL OR
-           LOWER(d.code) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR
-           LOWER(d.description) LIKE LOWER(CONCAT('%', :searchQuery, '%')))
+      AND (:searchQuery IS NULL OR (
+            LOWER(d.code) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR
+            LOWER(d.description) LIKE LOWER(CONCAT('%', :searchQuery, '%'))
+          )
+      )
     """)
     Page<Deal> findByFilters(
             @Param("active") Boolean active,

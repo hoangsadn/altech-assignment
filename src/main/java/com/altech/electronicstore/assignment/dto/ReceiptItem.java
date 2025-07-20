@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 public class ReceiptItem {
     private String productName;
     private int quantity;
