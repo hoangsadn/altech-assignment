@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class DealFilterRequest {
     private Integer page;
     private Integer size;
-    private String sortBy = "name";
+    private String sortBy = "id";
     private String sortDirection = ProductFilterRequest.DIC_SORT.ASC.name(); // "asc" or "desc"
-    private String searchQuery;
-    private Boolean active;
+    private String searchQuery = "";
+    private Boolean active = true;
 
 }

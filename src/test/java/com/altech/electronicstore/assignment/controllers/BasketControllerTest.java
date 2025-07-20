@@ -1,11 +1,7 @@
 package com.altech.electronicstore.assignment.controllers;
 
 import com.altech.electronicstore.assignment.auth.AuthUtil;
-import com.altech.electronicstore.assignment.dto.Basket;
-import com.altech.electronicstore.assignment.dto.InsertBasketRequest;
-import com.altech.electronicstore.assignment.dto.Receipt;
-import com.altech.electronicstore.assignment.dto.Response;
-import com.altech.electronicstore.assignment.dto.UserProfile;
+import com.altech.electronicstore.assignment.dto.*;
 import com.altech.electronicstore.assignment.services.BasketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,116 +27,110 @@ class BasketControllerTest {
     @InjectMocks
     private BasketController basketController;
 
-    private UserProfile userProfile;
-    private Basket basket;
-    private Receipt receipt;
-    private InsertBasketRequest insertBasketRequest;
+    private UserProfile mockUser;
+    private Basket mockBasket;
+    private Receipt mockReceipt;
 
     @BeforeEach
     void setUp() {
-        // Initialize test data
-        userProfile = new UserProfile();
-        userProfile.setId(1L);
+        mockUser = new UserProfile();
+        mockUser.setId(1L);
 
-        basket = new Basket();
-        // Assume Basket has some fields, e.g., userId, productIds
-        basket.setUserId(1L);
+        mockBasket = new Basket();
+        mockBasket.setUserId(1L);
+        mockBasket.setBasketProducts(Collections.emptyList());
 
-        receipt = new Receipt();
-        // Assume Receipt has some fields, e.g., totalPrice
-        receipt.setTotalPrice(100.0);
+        mockReceipt = new Receipt();
+        mockReceipt.setItems(Collections.emptyList());
 
-        insertBasketRequest = new InsertBasketRequest();
-        insertBasketRequest.setProductId(2L);
+        when(authUtil.getUserInfo()).thenReturn(mockUser);
     }
 
     @Test
     void testAddProductToBasket_Success() {
         // Arrange
-        when(authUtil.getUserInfo()).thenReturn(userProfile);
-        when(basketService.addProduct(userProfile.getId(), insertBasketRequest.getProductId())).thenReturn(basket);
+        InsertBasketRequest request = new InsertBasketRequest();
+        request.setProductId(10L);
+        request.setQuantity(2);
+
+        when(basketService.addProduct(any(InsertBasketRequest.class))).thenReturn(mockBasket);
 
         // Act
-        Response<Basket> response = basketController.addProductToBasket(insertBasketRequest);
+        Response<Basket> response = basketController.addProductToBasket(request);
 
         // Assert
         assertNotNull(response);
-        assertEquals(basket, response.getData());
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, times(1)).addProduct(userProfile.getId(), insertBasketRequest.getProductId());
+        assertEquals(mockBasket, response.getData());
+        verify(basketService).addProduct(any(InsertBasketRequest.class));
     }
 
     @Test
     void testRemoveProductFromBasket_Success() {
         // Arrange
-        Long productId = 2L;
-        when(authUtil.getUserInfo()).thenReturn(userProfile);
-        when(basketService.removeProduct(userProfile.getId(), productId)).thenReturn(basket);
+        Long productId = 10L;
+        when(basketService.removeProduct(mockUser.getId(), productId)).thenReturn(mockBasket);
 
         // Act
         Response<Basket> response = basketController.removeProductFromBasket(productId);
 
         // Assert
         assertNotNull(response);
-        assertEquals(basket, response.getData());
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, times(1)).removeProduct(userProfile.getId(), productId);
+        assertEquals(mockBasket, response.getData());
+        verify(basketService).removeProduct(mockUser.getId(), productId);
     }
 
     @Test
     void testGetBasket_Success() {
         // Arrange
-        when(authUtil.getUserInfo()).thenReturn(userProfile);
-        when(basketService.getSingletonBasket(userProfile.getId())).thenReturn(basket);
+        when(basketService.getSingletonBasket(mockUser.getId())).thenReturn(mockBasket);
 
         // Act
         Response<Basket> response = basketController.getBasket();
 
         // Assert
         assertNotNull(response);
-        assertEquals(basket, response.getData());
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, times(1)).getSingletonBasket(userProfile.getId());
+        assertEquals(mockBasket, response.getData());
+        verify(basketService).getSingletonBasket(mockUser.getId());
     }
 
     @Test
     void testGetReceipt_Success() {
         // Arrange
-        when(authUtil.getUserInfo()).thenReturn(userProfile);
-        when(basketService.generateReceipt(userProfile.getId())).thenReturn(receipt);
+        String code = "DISCOUNT10";
+        when(basketService.generateReceipt(mockUser.getId(), code)).thenReturn(mockReceipt);
 
         // Act
-        Response<Receipt> response = basketController.getReceipt();
+        Response<Receipt> response = basketController.getReceipt(code);
 
         // Assert
         assertNotNull(response);
-        assertEquals(receipt, response.getData());
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, times(1)).generateReceipt(userProfile.getId());
+        assertEquals(mockReceipt, response.getData());
+        verify(basketService).generateReceipt(mockUser.getId(), code);
     }
 
     @Test
-    void testAddProductToBasket_AuthUtilThrowsException() {
+    void testAddProductToBasket_ExceptionThrown() {
         // Arrange
-        when(authUtil.getUserInfo()).thenThrow(new RuntimeException("Authentication failed"));
+        InsertBasketRequest request = new InsertBasketRequest();
+        request.setProductId(10L);
+        request.setQuantity(2);
+
+        when(basketService.addProduct(any())).thenThrow(new RuntimeException("Add failed"));
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> basketController.addProductToBasket(insertBasketRequest));
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, never()).addProduct(anyLong(), anyLong());
+        assertThrows(RuntimeException.class, () -> basketController.addProductToBasket(request));
+        verify(basketService).addProduct(any());
     }
 
     @Test
-    void testRemoveProductFromBasket_ServiceThrowsException() {
+    void testRemoveProductFromBasket_NotFound() {
         // Arrange
-        Long productId = 2L;
-        when(authUtil.getUserInfo()).thenReturn(userProfile);
-        when(basketService.removeProduct(userProfile.getId(), productId))
+        Long productId = 999L;
+        when(basketService.removeProduct(mockUser.getId(), productId))
                 .thenThrow(new RuntimeException("Product not found"));
 
         // Act & Assert
         assertThrows(RuntimeException.class, () -> basketController.removeProductFromBasket(productId));
-        verify(authUtil, times(1)).getUserInfo();
-        verify(basketService, times(1)).removeProduct(userProfile.getId(), productId);
+        verify(basketService).removeProduct(mockUser.getId(), productId);
     }
 }

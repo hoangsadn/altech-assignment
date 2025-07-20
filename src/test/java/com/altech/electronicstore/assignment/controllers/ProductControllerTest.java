@@ -48,7 +48,7 @@ class ProductControllerTest {
         product.setPrice(100.0);
 
         deal = new Deal();
-        deal.setId(1);
+        deal.setId(1L);
 
         filterRequest = new ProductFilterRequest();
         // Assume filter has fields like page, size, etc.

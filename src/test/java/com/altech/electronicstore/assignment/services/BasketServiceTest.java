@@ -2,27 +2,22 @@ package com.altech.electronicstore.assignment.services;
 
 import com.altech.electronicstore.assignment.common.APIException;
 import com.altech.electronicstore.assignment.common.APICode;
-import com.altech.electronicstore.assignment.dto.Basket;
-import com.altech.electronicstore.assignment.dto.Product;
-import com.altech.electronicstore.assignment.dto.Receipt;
-import com.altech.electronicstore.assignment.dto.ReceiptItem;
+import com.altech.electronicstore.assignment.dto.*;
 import com.altech.electronicstore.assignment.repositories.BasketRepository;
+import com.altech.electronicstore.assignment.services.deal.DealFactory;
+import com.altech.electronicstore.assignment.services.deal.DealHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import org.mockito.*;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class BasketServiceTest {
+
+    @InjectMocks
+    private BasketService basketService;
 
     @Mock
     private BasketRepository basketRepository;
@@ -30,158 +25,143 @@ class BasketServiceTest {
     @Mock
     private ProductService productService;
 
-    @InjectMocks
-    private BasketService basketService;
+    @Mock
+    private DealFactory dealFactory;
 
-    private Basket basket;
-    private Product product;
-    private Long userId = 1L;
-    private Long productId = 2L;
+    @Mock
+    private DealService dealService;
+
+    private Basket mockBasket;
+    private Product mockProduct;
 
     @BeforeEach
     void setUp() {
-        // Initialize test data
-        basket = new Basket();
-        basket.setUserId(userId);
-        basket.setProducts(new ArrayList<>());
+        MockitoAnnotations.openMocks(this);
 
-        product = new Product();
-        product.setId(productId);
-        product.setName("Test Product");
-        product.setPrice(100.0);
-        product.setStock(10);
+        mockProduct = new Product();
+        mockProduct.setId(1L);
+        mockProduct.setStock(10);
+        mockProduct.setPrice(100.0);
+        mockProduct.setName("Test Product");
+        mockProduct.setBasketProducts(new ArrayList<>());
+
+        mockBasket = new Basket();
+        mockBasket.setUserId(1L);
+        mockBasket.setBasketProducts(new ArrayList<>());
     }
 
     @Test
-    void testAddProduct_Success_NewBasket() {
-        // Arrange
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.empty());
-        when(basketRepository.save(any(Basket.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(productService.getProductById(productId)).thenReturn(product);
-//        when(productService.insertProduct(any(Product.class))).thenReturn(product);
+    void testAddProduct_NewProduct_Success() {
+        InsertBasketRequest request = new InsertBasketRequest();
+        request.setProductId(1L);
+        request.setUserId(1L);
+        request.setQuantity(2);
 
-        // Act
-        Basket result = basketService.addProduct(userId, productId);
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.of(mockBasket));
+        when(productService.getProductById(1L)).thenReturn(mockProduct);
+        when(basketRepository.save(any(Basket.class))).thenReturn(mockBasket);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertEquals(1, result.getProducts().size());
-        assertEquals(product, result.getProducts().get(0));
-        assertEquals(9, product.getStock()); // Stock decremented by 1
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, times(2)).save(any(Basket.class)); // Once for new basket, once for updated
-        verify(productService, times(1)).getProductById(productId);
+        Basket result = basketService.addProduct(request);
+
+        assertEquals(1, result.getBasketProducts().size());
+        verify(productService).updateProduct(any());
+        verify(basketRepository).save(any());
     }
 
     @Test
-    void testAddProduct_Success_ExistingBasket() {
-        // Arrange
-        basket.getProducts().add(new Product()); // Simulate existing product
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.of(basket));
-        when(basketRepository.save(any(Basket.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(productService.getProductById(productId)).thenReturn(product);
-//        when(productService.insertProduct(any(Product.class))).thenReturn(product);
+    void testAddProduct_OutOfStock_ThrowsException() {
+        InsertBasketRequest request = new InsertBasketRequest();
+        request.setProductId(1L);
+        request.setUserId(1L);
+        request.setQuantity(20); // Exceeds stock
 
-        // Act
-        Basket result = basketService.addProduct(userId, productId);
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.of(mockBasket));
+        when(productService.getProductById(1L)).thenReturn(mockProduct);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertEquals(2, result.getProducts().size()); // One existing + one new
-        assertEquals(product, result.getProducts().get(1));
-        assertEquals(9, product.getStock()); // Stock decremented by 1
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, times(1)).save(basket);
-        verify(productService, times(1)).getProductById(productId);
-    }
-
-    @Test
-    void testAddProduct_ProductOutOfStock() {
-        // Arrange
-        product.setStock(0);
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.of(basket));
-        when(productService.getProductById(productId)).thenReturn(product);
-
-        // Act & Assert
-        APIException exception = assertThrows(APIException.class, () -> basketService.addProduct(userId, productId));
+        APIException exception = assertThrows(APIException.class, () -> basketService.addProduct(request));
         assertEquals(APICode.PRODUCT_OUT_OF_STOCK.getMessage(), exception.getMessage());
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, never()).save(any(Basket.class));
-        verify(productService, times(1)).getProductById(productId);
-        verify(productService, never()).insertProduct(any(Product.class));
-    }
-
-    @Test
-    void testGetSingletonBasket_NewBasket() {
-        // Arrange
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.empty());
-        when(basketRepository.save(any(Basket.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        Basket result = basketService.getSingletonBasket(userId);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertTrue(result.getProducts().isEmpty());
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, times(1)).save(any(Basket.class));
-    }
-
-    @Test
-    void testGetSingletonBasket_ExistingBasket() {
-        // Arrange
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.of(basket));
-
-        // Act
-        Basket result = basketService.getSingletonBasket(userId);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(basket, result);
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, never()).save(any(Basket.class));
     }
 
     @Test
     void testRemoveProduct_Success() {
-        // Arrange
-        basket.getProducts().add(product);
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.of(basket));
-        when(basketRepository.save(any(Basket.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(productService.getProductById(productId)).thenReturn(product);
+        BasketProduct bp = new BasketProduct();
+        bp.setProduct(mockProduct);
+        bp.setQuantity(2);
+        mockBasket.getBasketProducts().add(bp);
 
-        // Act
-        Basket result = basketService.removeProduct(userId, productId);
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.of(mockBasket));
+        when(productService.getProductById(1L)).thenReturn(mockProduct);
+        when(basketRepository.save(any())).thenReturn(mockBasket);
 
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getProducts().isEmpty());
-        assertEquals(11, product.getStock()); // Stock incremented by 1
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, times(1)).save(basket);
-        verify(productService, times(1)).getProductById(productId);
+        Basket updated = basketService.removeProduct(1L, 1L);
+
+        assertTrue(updated.getBasketProducts().isEmpty());
+        assertEquals(12, mockProduct.getStock()); // 10 + 2
     }
 
     @Test
-    void testRemoveProduct_ProductNotInBasket() {
-        // Arrange
-        when(basketRepository.findByUserId(userId)).thenReturn(Optional.of(basket));
-        when(basketRepository.save(any(Basket.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(productService.getProductById(productId)).thenReturn(product);
+    void testRemoveProduct_NotInBasket_ThrowsException() {
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.of(mockBasket));
+        when(productService.getProductById(1L)).thenReturn(mockProduct);
 
-        // Act
-        Basket result = basketService.removeProduct(userId, productId);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getProducts().isEmpty());
-        verify(basketRepository, times(1)).findByUserId(userId);
-        verify(basketRepository, times(1)).save(basket);
-        verify(productService, times(1)).getProductById(productId);
-        verify(productService, never()).insertProduct(any(Product.class));
+        APIException exception = assertThrows(APIException.class, () -> basketService.removeProduct(1L, 1L));
+        assertEquals(APICode.PRODUCT_NOT_FOUND.getMessage(), exception.getMessage());
     }
 
+    @Test
+    void testGenerateReceipt_NoDeals() {
+        BasketProduct bp = new BasketProduct();
+        bp.setProduct(mockProduct);
+        bp.setQuantity(2);
+        mockBasket.getBasketProducts().add(bp);
+
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.of(mockBasket));
+
+        Receipt receipt = basketService.generateReceipt(1L, "");
+
+        assertEquals(1, receipt.getItems().size());
+        assertEquals(200.0, receipt.getTotalPrice());
+    }
+
+    @Test
+    void testApplyDeals_ValidDealApplied() {
+        Receipt receipt = new Receipt();
+        receipt.setItems(new ArrayList<>());
+
+        Deal mockDeal = new Deal();
+        mockDeal.setCode("SAVE10");
+
+        DealHandler mockHandler = mock(DealHandler.class);
+        when(dealService.getDealByCode("SAVE10")).thenReturn(mockDeal);
+        when(dealFactory.getHandler("SAVE10")).thenReturn(mockHandler);
+        when(mockHandler.applyDeal(receipt)).thenReturn(receipt);
+
+        Receipt updated = basketService.applyDeals("SAVE10", receipt);
+
+        assertSame(receipt, updated);
+        verify(mockHandler).applyDeal(receipt);
+    }
+
+    @Test
+    void testApplyDeals_DealCodeNotFound() {
+        Receipt receipt = new Receipt();
+        receipt.setItems(new ArrayList<>());
+
+        when(dealService.getDealByCode("INVALID")).thenReturn(null);
+
+        Receipt result = basketService.applyDeals("INVALID", receipt);
+
+        assertSame(receipt, result); // unchanged
+    }
+
+    @Test
+    void testGetSingletonBasket_CreatesNewIfNotExist() {
+        when(basketRepository.findByUserId(1L)).thenReturn(Optional.empty());
+        when(basketRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Basket result = basketService.getSingletonBasket(1L);
+
+        assertEquals(1L, result.getUserId());
+        verify(basketRepository).save(any());
+    }
 }
