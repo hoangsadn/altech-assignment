@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class InsertBasketRequest {
     private Long productId;
     private int quantity;
+    private Long userId;
 
 }

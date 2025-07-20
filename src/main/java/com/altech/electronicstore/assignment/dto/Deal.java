@@ -15,7 +15,12 @@ public class Deal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String description; // e.g., "Buy 1 get 50% off the second"
+    private String code;
     private LocalDateTime expiration;
+
+    private boolean active; // Indicates if the deal is currently active
+
+
 }

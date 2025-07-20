@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,7 +43,8 @@ public class BasketController {
     @PostMapping("/add")
     public Response<Basket> addProductToBasket(@RequestBody InsertBasketRequest request) {
         UserProfile userId = authUtil.getUserInfo();
-        Basket updatedBasket = basketService.addProduct(userId.getId(), request.getProductId());
+        request.setUserId(userId.getId());
+        Basket updatedBasket = basketService.addProduct(request);
         return Response.success(updatedBasket);
     }
 
@@ -86,9 +88,10 @@ public class BasketController {
         @ApiResponse(responseCode = "401", description = "Unauthorized access.")
     })
     @GetMapping("/receipt")
-    public Response<Receipt> getReceipt(){
+    // add
+    public Response<Receipt> getReceipt(@RequestParam String code) {
         UserProfile userId = authUtil.getUserInfo();
-        Receipt receipt = basketService.generateReceipt(userId.getId());
+        Receipt receipt = basketService.generateReceipt(userId.getId(), code);
         return Response.success(receipt);
 
     }

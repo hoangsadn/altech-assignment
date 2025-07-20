@@ -17,14 +17,13 @@ public class Basket {
     private Long userId;
 
     @Version
-    private Long version; // Optimistic locking field
+    private Long version;
 
-    @ManyToMany
-    @JoinTable(
-            name = "basket_products",
-            joinColumns = @JoinColumn(name = "basket_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products = new ArrayList<>();
+    // Comma-separated list of deal codes applied to the basket
+    private String codesApplied;
+
+
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BasketProduct> basketProducts = new ArrayList<>();
 
 }
