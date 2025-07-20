@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.altech.electronicstore'
@@ -19,6 +20,20 @@ configurations {
 	}
 }
 
+jacoco {
+	toolVersion = "0.8.10"  // Use the latest stable version
+}
+
+jacocoTestReport {
+	dependsOn test
+
+	reports {
+		xml.required = true
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -28,9 +43,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation('org.apache.commons:commons-lang3:3.18.0')
 	compileOnly 'org.projectlombok:lombok'
 	implementation 'org.postgresql:postgresql:42.7.3'
-	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+//	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
