@@ -12,7 +12,7 @@ public class ProductFilterRequest {
     private Integer size;
     private String sortBy = "name";
     private String sortDirection = DIC_SORT.ASC.name(); // "asc" or "desc"
-    private String searchQuery;
+    private String searchQuery = "";
 
 
     public enum DIC_SORT{
